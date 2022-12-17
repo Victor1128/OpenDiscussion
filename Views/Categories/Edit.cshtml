@@ -1,0 +1,23 @@
+﻿@model OpenDiscussion.Models.Category
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form method="post" action="/Categories/Edit/@Model.Id">
+
+    @Html.Label("CategoryName", "Denumire categorie")
+
+    <br /> 
+
+    @Html.Editor("CategoryName")
+
+    @Html.ValidationMessageFor(m => m.CategoryName, null, new { @class = "text-danger" })
+
+    <br />
+    <br />
+
+    <button class="btn btn-success" type="submit">Modifica categoria</button>
+</form>

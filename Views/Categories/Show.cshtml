@@ -1,0 +1,22 @@
+﻿@model OpenDiscussion.Models.Category
+
+<p>@Model.CategoryName</p>
+
+<br/>
+<br/>
+
+@foreach (OpenDiscussion.Models.Topic top in ViewBag.Topics)
+{
+    <div class="card">
+        <a class="btn btn-success" href="/Topics/Show/@top.Id">
+        @Html.Partial("ArticleInfo", top)    
+        </a>
+    </div>
+
+    <br/>
+    <br/>
+}
+
+<br />
+<hr />
+<br />

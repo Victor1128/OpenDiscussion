@@ -1,0 +1,52 @@
+﻿@model OpenDiscussion.Models.Topic
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+@using (Html.BeginForm(actionName: "Edit", controllerName: "Topics"))
+{
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.Label("Title", "Titlu Topic")
+
+    <br />
+
+    @Html.EditorFor(m => m.Title, new { htmlAttributes = new { @class = "form-control" } })
+
+    @Html.ValidationMessageFor(m => m.Title, null, new {@class = "text-danger" })
+
+    <br />
+
+    <br />
+
+    @Html.Label("Content", "Continut Topic")
+
+    <br />
+
+    @Html.Editor("Content", new { htmlAttributes = new { @class = "form-control" } })
+
+    @Html.ValidationMessage("Content", null, new { @class = "text-danger" })
+
+    <br />
+
+    <br />
+
+    @Html.HiddenFor(m => m.Date)
+
+    <label>Selectati categoria</label>
+
+    @Html.DropDownListFor(m => m.CategoryId,
+    new SelectList(Model.Categ, "Value", "Text"),
+    "Selectati categoria", new { @class = "form-control" })
+
+    @Html.ValidationMessageFor(m => m.CategoryId, null, new { @class = "text-danger" })
+
+    <br />
+
+    <button class="btn btn-sm btn-success" type="submit">Modifica Topic</button>
+
+}
+
+

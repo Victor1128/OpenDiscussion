@@ -1,0 +1,24 @@
+﻿@model OpenDiscussion.Models.Response
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Editare raspuns</h2>
+
+<br />
+
+<form method="post" action="/Responses/Edit/@Model.Id">
+    <label>Continut raspuns</label>
+
+    <br />
+
+    <textarea name="Content">@Model.Content</textarea>
+
+    @Html.ValidationMessageFor(m => m.Content, null, new { @class = "text-danger" })
+
+    <br />
+
+    <button class="btn btn-primary" type="submit">Editeaza raspuns</button>
+</form>
+

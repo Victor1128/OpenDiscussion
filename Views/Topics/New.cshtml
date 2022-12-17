@@ -1,0 +1,55 @@
+﻿@model OpenDiscussion.Models.Topic
+
+@{
+    ViewBag.Title = "New";
+}
+
+<h2 class="text-center mt-5">Adaugare topic</h2>
+
+<br />
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-6 offset-3">
+            @using (Html.BeginForm(actionName: "New", controllerName: "Topics", method: FormMethod.Post))
+            {
+                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+                @Html.Label("Title", "Titlu Topic")
+
+                <br />
+
+                @Html.TextBox("Title", null, new { @class = "form-control"})
+
+                @Html.ValidationMessageFor(m => m.Title, null, new {@class = "text-danger" })
+
+                <br />
+                <br />
+
+                @Html.Label("Content", "Continut Topic")
+
+                <br />
+
+                @Html.TextArea("Content", null, new { @class = "form-control" })
+
+                @Html.ValidationMessage("Content", null, new { @class = "text-danger" })
+
+                <br />
+                <br />
+
+                <label>Selectati categoria</label>
+                @Html.DropDownListFor(m => m.CategoryId, new
+                SelectList(Model.Categ, "Value", "Text"), "Selectati categoria",
+                new { @class = "form-control" })
+
+                @Html.ValidationMessageFor(m => m.CategoryId, null, new { @class = "text-danger" })
+
+                <br />
+                <br />
+
+                <button class="btn btn-success" type="submit">Adauga topic</button>
+
+            }
+        </div>
+    </div>
+</div>
