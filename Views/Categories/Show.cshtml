@@ -5,11 +5,11 @@
 <br/>
 <br/>
 
-@foreach (OpenDiscussion.Models.Topic top in ViewBag.Topics)
+@foreach (OpenDiscussion.Models.Topic top in @Model.Topics ?? new List<Topic>())
 {
     <div class="card">
         <a class="btn btn-success" href="/Topics/Show/@top.Id">
-        @Html.Partial("ArticleInfo", top)    
+        @Html.Partial("TopicInfo", top)    
         </a>
     </div>
 

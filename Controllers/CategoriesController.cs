@@ -50,10 +50,12 @@ namespace OpenDiscussion.Controllers
         {
             Category category = db.Categories.Find(id);
 
-            IQueryable<Topic> topics = db.Topics.Include("Category")
-                                                   .Include("User")
-                                                   .Where(top => top.CategoryId == id);
-            category.Topics = (ICollection<Topic>?)topics;
+            ICollection<Topic>? topics = db.Topics.Include("Category")
+                                                  .Include("User")
+                                                  .Where(top => top.CategoryId == id)
+                                                  .ToList();
+
+            category.Topics = topics;
 
             return View(category);
         }
