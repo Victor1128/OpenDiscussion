@@ -124,7 +124,7 @@ namespace OpenDiscussion.Controllers
 
             top.Categ = GetAllCategories();
 
-            if (top.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            if (top.UserId == _userManager.GetUserId(User) || User.IsInRole("Moderator") || User.IsInRole("Admin"))
             {
                 return View(top);
             }
@@ -143,7 +143,7 @@ namespace OpenDiscussion.Controllers
 
             if (ModelState.IsValid)
             {
-                if (top.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+                if (top.UserId == _userManager.GetUserId(User) || User.IsInRole("Moderator") || User.IsInRole("Admin"))
                 {
                     top.Title = requestTopic.Title;
                     top.Content = requestTopic.Content;
@@ -177,7 +177,7 @@ namespace OpenDiscussion.Controllers
                                  .Where(top => top.Id == id)
                                  .First();
 
-            if (top.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            if (top.UserId == _userManager.GetUserId(User) || User.IsInRole("Moderator")  || User.IsInRole("Admin"))
             {
                 var categId = top.CategoryId;
                 db.Topics.Remove(top);

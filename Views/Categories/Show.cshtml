@@ -1,14 +1,12 @@
 ﻿@model OpenDiscussion.Models.Category
 
-<p>@Model.CategoryName</p>
+<h1 class="d-flex flex-row justify-content-center m-5 text-light">@Model.CategoryName</h1>
 
-<br/>
-<br/>
 
 @foreach (OpenDiscussion.Models.Topic top in @Model.Topics ?? new List<Topic>())
 {
     <div class="card">
-        <a class="btn btn-success" href="/Topics/Show/@top.Id">
+        <a class="btn btn-block" href="/Topics/Show/@top.Id">
         @Html.Partial("TopicInfo", top)    
         </a>
     </div>
