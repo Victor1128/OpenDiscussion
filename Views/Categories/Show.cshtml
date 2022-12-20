@@ -2,6 +2,10 @@
 
 <h1 class="d-flex flex-row justify-content-center m-5 text-light">@Model.CategoryName</h1>
 
+@if (ViewBag.Msg != null)
+{
+    <h2 id="alertmsg" class="alert-success mb-5 text-center p-3">@ViewBag.Msg</h2>
+}
 
 @foreach (OpenDiscussion.Models.Topic top in @Model.Topics ?? new List<Topic>())
 {
