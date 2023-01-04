@@ -1,0 +1,29 @@
+﻿@model OpenDiscussion.Models.ApplicationUser
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h1 class="d-flex flex-row justify-content-center m-5 text-light">Editare user</h1>
+<div class="card">
+
+   <form method="post" action="/Users/Edit/@Model.Id">
+        @foreach(var role in ViewBag.roles){
+            if(ViewBag.userRole.RoleId != role.Id){
+                <input name="UserName" id=@role.Id type="radio" value=@role.Id />
+            <label for=@role.Id>@role.Name</label>
+
+            <br>
+            }
+            else{
+                <input name="UserName" id=@role.Id type="radio" value=@role.Id checked />
+            <label for=@role.Id>@role.Name</label>
+
+            <br>
+            }
+        }
+        @Html.ValidationMessageFor(m => m.UserName, null, new { @class = "text-danger d-flex align-items-center justify-content-center" })
+        <button class="btn btn-success m-2" type="submit">Modifica rolul</button>
+    </form>
+    
+    <pre id="log"></pre>
+</div>

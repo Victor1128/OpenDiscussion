@@ -30,6 +30,10 @@
                             <li class="nav-item">
                                 <a class="nav-link text-light" asp-area="" asp-controller="Categories" asp-action="New">Adauga o categorie noua</a>
                             </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Users" asp-action="Index">Utilizatori</a>
+                            </li>
                         }
 
                         @if (User.IsInRole("Moderator"))
