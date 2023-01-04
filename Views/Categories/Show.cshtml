@@ -1,18 +1,47 @@
 ﻿@model OpenDiscussion.Models.Category
 
-<h1 class="d-flex flex-row justify-content-center m-5 text-light">@Model.CategoryName</h1>
+<h1 class="d-flex flex-row justify-content-center m-5 text-light">@ViewBag.CategoryName</h1>
 
 @if (ViewBag.Msg != null)
 {
     <h2 id="alertmsg" class="alert-success mb-5 text-center p-3">@ViewBag.Msg</h2>
 }
-
-@foreach (OpenDiscussion.Models.Topic top in @Model.Topics ?? new List<Topic>())
+@foreach (var top in ViewBag.Topics ?? new List<Topic>())
 {
     <div class="card">
         <a class="btn btn-block" href="/Topics/Show/@top.Id">
-        @Html.Partial("TopicInfo", top)    
+           @top.Title
         </a>
+    </div>
+
+    <br />
+    <br />
+}
+    <div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link"
+                   href="/Categories/Show/@ViewBag.CategoryId?page=1" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                @for (int i = 1; i <= ViewBag.lastPage; i++)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                   href="/Categories/Show/@ViewBag.CategoryId?page=@i">@(i)</a>
+                    </li>
+                }
+                <li class="page-item">
+                    <a class="page-link"
+                   href="/Categories/Show/@ViewBag.CategoryId?page=@(ViewBag.lastPage)" aria-
+                   label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
     <br/>
