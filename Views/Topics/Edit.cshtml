@@ -1,0 +1,62 @@
+﻿@model OpenDiscussion.Models.Topic
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h1 class="d-flex flex-row justify-content-center m-5 text-light">Editare Topic</h1>
+
+@using (Html.BeginForm(actionName: "Edit", controllerName: "Topics"))
+{
+    <div class="card p-2">
+
+        @Html.Label("Title", "Titlu Topic", new { @style = "background-color: var(--bs-dark) !important;",
+                                                              @class = "py-3 px-3 rounded-2 d-flex align-items-center justify-content-center text-light m-2"})
+
+        <br />
+
+        @Html.ValidationSummary(false, "", new { @class = "text-danger d-flex align-items-center justify-content-center" })
+
+        <br/>
+
+        @Html.EditorFor(m => m.Title, new { htmlAttributes = new { @style = "width:90%; box-sizing:border-box !important;", @class = "form-control d-flex align-items-center justify-content-center m-auto" } })
+
+        <br />
+
+        @Html.ValidationMessageFor(m => m.Title, null, new {@class = "text-danger d-flex align-items-center justify-content-center" })
+
+        <br />
+
+        @Html.Label("Content", "Continut Topic", new { @style ="background-color: var(--bs-dark) !important;",
+                                                       @class = "py-3 px-3 rounded-2 d-flex align-items-center justify-content-center text-light m-2"})
+
+        <br />
+
+        @Html.Editor("Content", new { htmlAttributes = new { @style = "width:90%; box-sizing:border-box !important;", @class = "form-control d-flex align-items-center justify-content-center m-auto" } })
+
+        <br />
+
+        @Html.ValidationMessage("Content", null, new { @class = "text-danger d-flex align-items-center justify-content-center" })
+
+        <br />
+
+        @Html.HiddenFor(m => m.Date)
+
+        <label class="py-3 px-3 rounded-2 d-flex align-items-center justify-content-center text-light m-2" style="background-color: var(--bs-dark) !important;">Selectati categoria</label>
+
+        <br />
+
+        @Html.DropDownListFor(m => m.CategoryId, new
+        SelectList(Model.Categ, "Value", "Text"), "Selectati categoria",
+        new { @style ="width:90%; box-sizing:border-box !important;",
+        @class = "form-control d-flex align-items-center justify-content-center m-auto" })
+
+        <br />
+
+        @Html.ValidationMessageFor(m => m.CategoryId, null, new { @class = "text-danger d-flex align-items-center justify-content-center" })
+
+        <br />
+
+        <button class="btn btn-sm btn-success m-2" type="submit">Modifica Topic</button>
+    </div>
+}
