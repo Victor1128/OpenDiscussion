@@ -60,6 +60,36 @@ namespace OpenDiscussion.Controllers
             {
                 ViewBag.Msg = TempData["message"].ToString();
             }
+            var search = "";
+            // MOTOR DE CAUTARE
+            if (Convert.ToString(HttpContext.Request.Query["search"]) != null)
+            {
+                search = Convert.ToString(HttpContext.Request.Query["search"]).Trim();
+
+                List<int> topicIds = db.Topics.Where
+                                        (
+                                        top => top.Title.Contains(search)
+                                              || top.Content.Contains(search)
+                                        ).Select(t => t.Id).ToList();
+
+                List<int> topicIdsOfResponsesWithSearchString =
+                            db.Responses.Where
+                            (
+                            rsp => rsp.Content.Contains(search)
+                            ).Select(r => (int)r.TopicId).ToList();
+                List<int> mergedIds = topicIds.Union(topicIdsOfResponsesWithSearchString).ToList();
+                topics = db.Topics.Include("Category")
+                                  .Include("User")
+                                  .Where
+                                  (
+                                  topic => mergedIds.Contains(topic.Id)
+                                  && topic.CategoryId == id
+                                  )
+                                  .OrderBy(t => t.Date)
+                                  .ToList();
+            }
+            ViewBag.SearchString = search;
+            //AFISARE PAGINATA
             int _perPage = 3;
             int totalItems = topics.Count();
             var currentPage = Convert.ToInt32(HttpContext.Request.Query["page"]);
@@ -72,7 +102,15 @@ namespace OpenDiscussion.Controllers
             ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
             ViewBag.Topics = paginatedTopics;
             ViewBag.CategoryName = category.CategoryName;
-            ViewBag.CategoryId = category.Id;
+            if (search != "")
+            {
+                ViewBag.PaginationBaseUrl = "/Categories/Show/" + id + "?search="
+                + search + "&page";
+            }
+            else
+            {
+                ViewBag.PaginationBaseUrl = "/Categories/Show/" + id + "?page";
+            }
             //category.Topics = (ICollection<Topic>?) paginatedTopics;
             return View();
         }

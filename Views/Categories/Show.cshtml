@@ -6,6 +6,17 @@
 {
     <h2 id="alertmsg" class="alert-success mb-5 text-center p-3">@ViewBag.Msg</h2>
 }
+<form method="GET">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control"
+               placeholder="Search topics or keywords" name="search"
+               value="@ViewBag.SearchString">
+        <button class="btn btn-outline-success"
+                type="submit">
+            Search
+        </button>
+    </div>
+</form>
 @foreach (var top in ViewBag.Topics ?? new List<Topic>())
 {
     <div class="card">
@@ -22,7 +33,7 @@
             <ul class="pagination">
                 <li class="page-item">
                     <a class="page-link"
-                   href="/Categories/Show/@ViewBag.CategoryId?page=1" aria-label="Previous">
+                   href="@ViewBag.PaginationBaseUrl=1" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
@@ -30,12 +41,12 @@
                 {
                     <li class="page-item">
                         <a class="page-link"
-                   href="/Categories/Show/@ViewBag.CategoryId?page=@i">@(i)</a>
+                   href="@ViewBag.PaginationBaseUrl=@i">@(i)</a>
                     </li>
                 }
                 <li class="page-item">
                     <a class="page-link"
-                   href="/Categories/Show/@ViewBag.CategoryId?page=@(ViewBag.lastPage)" aria-
+                   href="@ViewBag.PaginationBaseUrl=@(ViewBag.lastPage)" aria-
                    label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
