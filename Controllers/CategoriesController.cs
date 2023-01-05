@@ -188,33 +188,33 @@ namespace OpenDiscussion.Controllers
                 if(sortOrder == "resp")
                 {
                     topics = db.Topics.Include("Category")
-                                  .Include("User")
-                                  .Where
-                                  (
-                                  topic => mergedIds.Contains(topic.Id)
-                                  && topic.CategoryId == id
-                                  )
-                                  .OrderByDescending(t => t.Date)
-                                  .ToList();
+                                .Include("User")
+                                .Where
+                                (
+                                topic => mergedIds.Contains(topic.Id)
+                                && topic.CategoryId == id
+                                )
+                                .OrderByDescending(top =>
+                                                      db.Responses
+                                                      .Where(resp => resp.TopicId == top.Id)
+                                                      .Count()
+                                                      )
+                                .ThenByDescending(top => top.Date)
+                                .ToList();
                 }
                 else
                 {
                     topics = db.Topics.Include("Category")
-                                  .Include("User")
-                                  .Where
-                                  (
-                                  topic => mergedIds.Contains(topic.Id)
-                                  && topic.CategoryId == id
-                                  )
-                                  .OrderByDescending(top =>
-                                                        db.Responses
-                                                        .Where(resp => resp.TopicId == top.Id)
-                                                        .Count()
-                                                        )
-                                  .ThenByDescending(top => top.Date)
-                                  .ToList();
+                                   .Include("User")
+                                   .Where
+                                   (
+                                   topic => mergedIds.Contains(topic.Id)
+                                   && topic.CategoryId == id
+                                   )
+                                   .OrderByDescending(t => t.Date)
+                                   .ToList();
                 }
-                
+
             }
             ViewBag.SearchString = search;
             //AFISARE PAGINATA

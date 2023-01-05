@@ -20,10 +20,10 @@
 <table class="table">
 <tr>
     <th>
-        @Html.ActionLink("Numar de raspunsuri", "Show", new { sortOrder = "resp" })
+            @Html.ActionLink("Numar de raspunsuri", "Show", new { search = ViewBag.SearchString, sortOrder = "resp",  })
     </th>
     <th>
-        @Html.ActionLink("Data", "Show", new { sortOrder = "date" })
+            @Html.ActionLink("Data", "Show", new { search = ViewBag.SearchString, sortOrder = "date" })
     </th>
 </tr>
 </table>
