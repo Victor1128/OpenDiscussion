@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -108,6 +108,7 @@ namespace OpenDiscussion.Controllers
                 {
                     topics = db.Topics.Include("Category")
 
+
                                   .Include("User")
                                   .Where
                                   (
@@ -130,9 +131,11 @@ namespace OpenDiscussion.Controllers
             ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
             ViewBag.Topics = paginatedTopics;
             ViewBag.Title = "Subiectele care se potrivesc cautarii tale";
+
             ViewBag.PaginationBaseUrl = "/Categories/Index/?search="
                 + search + "&sortOrder=" + sortOrder + "&page";
         }
+
             return View();
         }
 
@@ -179,11 +182,12 @@ namespace OpenDiscussion.Controllers
                                               || top.Content.Contains(search)
                                         ).Select(t => t.Id).ToList();
 
+
                 List<int> topicIdsOfResponsesWithSearchString =
                             db.Responses.Where
                             (
                             rsp => rsp.Content.Contains(search)
-                            ).Select(r => (int)r.TopicId).ToList();
+                            ).Select(r => r.TopicId.GetValueOrDefault()).ToList();
                 List<int> mergedIds = topicIds.Union(topicIdsOfResponsesWithSearchString).ToList();
                 if(sortOrder == "resp")
                 {
@@ -226,11 +230,13 @@ namespace OpenDiscussion.Controllers
             {
                 offset = (currentPage - 1) * _perPage;
             }
+
             var paginatedTopics = topics.Skip(offset).Take(_perPage);
             ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
             ViewBag.Topics = paginatedTopics;
             ViewBag.CategoryName = category.CategoryName;
-            if (search != "")
+
+            if (!String.IsNullOrWhiteSpace(search))
             {
                 ViewBag.PaginationBaseUrl = "/Categories/Show/" + id + "?search="
                 + search + "&sortOrder="+sortOrder+"&page";
@@ -239,7 +245,6 @@ namespace OpenDiscussion.Controllers
             {
                 ViewBag.PaginationBaseUrl = "/Categories/Show/" + id + "?sortOrder="+sortOrder+"&page";
             }
-            //category.Topics = (ICollection<Topic>?) paginatedTopics;
             return View();
         }
 

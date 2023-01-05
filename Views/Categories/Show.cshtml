@@ -6,11 +6,13 @@
 {
     <h2 id="alertmsg" class="alert-success mb-5 text-center p-3">@ViewBag.Msg</h2>
 }
+
 <form method="GET">
     <div class="input-group mb-3">
         <input type="text" class="form-control"
                placeholder="Search topics or keywords" name="search"
                value="@ViewBag.SearchString">
+
         <button class="btn btn-outline-success"
                 type="submit">
             Search
@@ -27,16 +29,19 @@
     </th>
 </tr>
 </table>
+
 @foreach (var top in ViewBag.Topics ?? new List<Topic>())
 {
     <div class="card">
         <a class="btn btn-block" href="/Topics/Show/@top.Id">
+
            @top.Title
         </a>
     </div>
 
     <br />
     <br />
+
 }
     <div>
         <nav aria-label="Page navigation example">
@@ -65,8 +70,10 @@
         </nav>
     </div>
 
+
     <br/>
     <br/>
 <br />
+
 <hr />
 <br />

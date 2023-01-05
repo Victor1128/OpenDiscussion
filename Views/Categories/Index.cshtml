@@ -14,6 +14,7 @@
     </div>
 </form>
 
+
 @if (ViewBag.SearchString != null)
 {
     <table class="table">
@@ -101,13 +102,14 @@ else{
     </div>
 
     <br />
+
     }
 
     if (User.IsInRole("Admin"))
     {
+
     <div class="d-flex align-items-center">
                 <a class="btn flex-fill alert-secondary" href="/Categories/New">Adauga o noua categorie</a>
     </div>
     }
 }
-
