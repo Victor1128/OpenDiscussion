@@ -43,55 +43,65 @@ namespace OpenDiscussion.Controllers
             {
                 ViewBag.Msg = TempData["message"].ToString();
             }
-            if (Convert.ToString(HttpContext.Request.Query["search"]) != null)
-            {
-                ICollection<Topic>? topics = db.Topics.Include("Category")
-                                                  .Include("User")
-                                                  .OrderBy(top => top.Date)
-                                                  .ToList();
-            if (TempData.ContainsKey("message"))
-            {
-                ViewBag.Msg = TempData["message"].ToString();
-            }
-            var search = "";
+
+
+            ICollection<Topic>? topics = db.Topics.Include("Category")
+                                                    .Include("User")
+                                                    .OrderBy(top => top.Date)
+                                                    .ToList();
+
+            string search = null;
+
             // MOTOR DE CAUTARE
+
+            if (!String.IsNullOrWhiteSpace(HttpContext.Request.Query["search"]))
+            {
+
                 search = Convert.ToString(HttpContext.Request.Query["search"]).Trim();
 
                 List<int> topicIds = db.Topics.Where
                                         (
                                         top => top.Title.Contains(search)
-                                              || top.Content.Contains(search)
+                                                || top.Content.Contains(search)
                                         ).Select(t => t.Id).ToList();
 
                 List<int> topicIdsOfResponsesWithSearchString =
                             db.Responses.Where
                             (
                             rsp => rsp.Content.Contains(search)
-                            ).Select(r => (int)r.TopicId).ToList();
+                            ).Select(r => r.TopicId.GetValueOrDefault()).ToList();
+
                 List<int> mergedIds = topicIds.Union(topicIdsOfResponsesWithSearchString).ToList();
+
                 topics = db.Topics.Include("Category")
-                                  .Include("User")
-                                  .Where
-                                  (
-                                  topic => mergedIds.Contains(topic.Id)
-                                  )
-                                  .OrderBy(t => t.Date)
-                                  .ToList();
-            
+                                    .Include("User")
+                                    .Where
+                                    (
+                                    topic => mergedIds.Contains(topic.Id)
+                                    )
+                                    .OrderBy(t => t.Date)
+                                    .ToList();
+            }
+
             ViewBag.SearchString = search;
+
             //AFISARE PAGINATA
+
             int _perPage = 3;
             int totalItems = topics.Count();
             var currentPage = Convert.ToInt32(HttpContext.Request.Query["page"]);
-            var offset  = 0;
+            var offset = 0;
+
             if (!currentPage.Equals(0))
             {
                 offset = (currentPage - 1) * _perPage;
             }
+
             var paginatedTopics = topics.Skip(offset).Take(_perPage);
             ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
             ViewBag.Topics = paginatedTopics;
             ViewBag.Title = "Subiectele care se potrivesc cautarii tale";
+
             if (search != "")
             {
                 ViewBag.PaginationBaseUrl = "/Categories/Index/?search="
@@ -101,8 +111,9 @@ namespace OpenDiscussion.Controllers
             {
                 ViewBag.PaginationBaseUrl = "/Categories/Index/?page";
             }
+
             //category.Topics = (ICollection<Topic>?) paginatedTopics;
-        }
+
             return View();
         }
 
@@ -158,7 +169,6 @@ namespace OpenDiscussion.Controllers
             ViewBag.SearchString = search;
 
             //AFISARE PAGINATA
-
 
             int _perPage = 3;
             int totalItems = topics.Count();
