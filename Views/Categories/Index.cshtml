@@ -1,45 +1,103 @@
 ﻿<!--   --bs-dark: #212529; --bs-body-color: #212529; #202225 background-color: #42464D; --bs-dark-rgb: 33, 37, 41 -->
 
-@{
-    ViewBag.Title = "Categorii";
-}
-
 <h1 class="d-flex flex-row justify-content-center m-5 text-light">@ViewBag.Title</h1>
 
-@foreach (var category in ViewBag.Categories ?? new List<Category>())
-{
-    <div class="card">    
-        <a class="btn btn-block" href="/Categories/Show/@category.Id">
-            <div class="card-body">
-                <h3 class="card-title py-3 px-3 rounded-2 text-light" style="background-color: var(--bs-dark) !important;">@category.CategoryName</h3>
-            </div>
-        </a>
+<form method="GET">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control"
+               placeholder="Search topics or keywords" name="search"
+               value="@ViewBag.SearchString">
+        <button class="btn btn-outline-success"
+                type="submit">
+            Search
+        </button>
+    </div>
+</form>
 
-        @if (User.IsInRole("Admin"))
-        {
-            <div class="card-footer">
-                <div class="d-flex align-items-center">
-                    <div class="d-flex flex-fill justify-content-center align-items-center m-1">
-                        <a class="btn alert-success" href="/Categories/Edit/@category.Id">Editare categorie</a>
+@if (ViewBag.SearchString != null)
+{
+    @foreach (var top in ViewBag.Topics ?? new List<Topic>())
+    {
+    <div class="card">
+                <a class="btn btn-block" href="/Topics/Show/@top.Id">
+                    @top.Title
+                </a>
+    </div>
+
+    <br />
+    <br />
+    }
+    <div>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link"
+                       href="@ViewBag.PaginationBaseUrl=1" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    @for (int i = 1; i <= ViewBag.lastPage; i++)
+                {
+                        <li class="page-item">
+                            <a class="page-link"
+                       href="@ViewBag.PaginationBaseUrl=@i">@(i)</a>
+                        </li>
+                }
+                    <li class="page-item">
+                        <a class="page-link"
+                       href="@ViewBag.PaginationBaseUrl=@(ViewBag.lastPage)" aria-
+                       label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+    </div>
+
+    <br />
+    <br />
+    <br />
+    <hr />
+    <br />
+}
+else{
+
+    @foreach (var category in ViewBag.Categories ?? new List<Category>())
+    {
+    <div class="card">
+                <a class="btn btn-block" href="/Categories/Show/@category.Id">
+                    <div class="card-body">
+                        <h3 class="card-title py-3 px-3 rounded-2 text-light" style="background-color: var(--bs-dark) !important;">@category.CategoryName</h3>
                     </div>
-                
-                    <div class="d-flex flex-fill justify-content-center align-items-center m-1">
-                            <form method="post" action="/Categories/Delete/@category.Id">
-                                <button class="btn btn-danger" type="submit">Sterge categoria</button>
-                            </form>
+                </a>
+
+                @if (User.IsInRole("Admin"))
+            {
+                    <div class="card-footer">
+                        <div class="d-flex align-items-center">
+                            <div class="d-flex flex-fill justify-content-center align-items-center m-1">
+                                <a class="btn alert-success" href="/Categories/Edit/@category.Id">Editare categorie</a>
+                            </div>
+
+                            <div class="d-flex flex-fill justify-content-center align-items-center m-1">
+                                <form method="post" action="/Categories/Delete/@category.Id">
+                                    <button class="btn btn-danger" type="submit">Sterge categoria</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        }
+            }
 
     </div>
 
-    <br/>
-}
+    <br />
+    }
 
-@if(User.IsInRole("Admin"))
-{
+    if (User.IsInRole("Admin"))
+    {
     <div class="d-flex align-items-center">
-        <a class="btn flex-fill alert-secondary" href="/Categories/New">Adauga o noua categorie</a>
+                <a class="btn flex-fill alert-secondary" href="/Categories/New">Adauga o noua categorie</a>
     </div>
+    }
 }
+
