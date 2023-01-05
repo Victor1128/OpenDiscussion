@@ -105,7 +105,7 @@ namespace OpenDiscussion.Controllers
             {
                 db.Topics.Add(top);
                 db.SaveChanges();
-                TempData["message"] = "Articolul a fost adaugat";
+                TempData["message"] = "Topicul a fost adaugat";
                 return RedirectToAction("Show", "Categories", new { id = top.CategoryId });
             }
             else
