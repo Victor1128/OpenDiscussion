@@ -30,7 +30,7 @@ namespace OpenDiscussion.Controllers
 
         [AllowAnonymous]
         //[Authorize(Roles = "User,Moderator,Admin")]
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder)
         {
             var categories = from category in db.Categories
                              orderby category.CategoryName
@@ -45,10 +45,27 @@ namespace OpenDiscussion.Controllers
             }
             if (Convert.ToString(HttpContext.Request.Query["search"]) != null)
             {
-                ICollection<Topic>? topics = db.Topics.Include("Category")
+                ICollection<Topic>? topics;
+                if (sortOrder == "resp")
+                {
+                    topics = db.Topics.Include("Category")
                                                   .Include("User")
-                                                  .OrderBy(top => top.Date)
+                                                  .OrderByDescending(
+                                                        top =>
+                                                        db.Responses
+                                                        .Where(resp => resp.TopicId == top.Id)
+                                                        .Count()
+                                                        )
+                                                  .ThenByDescending(top => top.Date)
                                                   .ToList();
+                }
+                else
+                {
+                    topics = db.Topics.Include("Category")
+                                                  .Include("User")
+                                                  .OrderByDescending(top => top.Date)
+                                                  .ToList();
+                }
             if (TempData.ContainsKey("message"))
             {
                 ViewBag.Msg = TempData["message"].ToString();
@@ -69,15 +86,36 @@ namespace OpenDiscussion.Controllers
                             rsp => rsp.Content.Contains(search)
                             ).Select(r => (int)r.TopicId).ToList();
                 List<int> mergedIds = topicIds.Union(topicIdsOfResponsesWithSearchString).ToList();
-                topics = db.Topics.Include("Category")
+                if (sortOrder == "resp")
+                {
+                    topics = db.Topics.Include("Category")
+
                                   .Include("User")
                                   .Where
                                   (
                                   topic => mergedIds.Contains(topic.Id)
                                   )
-                                  .OrderBy(t => t.Date)
+                                  .OrderByDescending(
+                                                    top =>
+                                                    db.Responses
+                                                    .Where(resp => resp.TopicId == top.Id)
+                                                    .Count()
+                                                    )
+                                  .ThenByDescending(top => top.Date)
                                   .ToList();
-            
+                }
+                else
+                {
+                    topics = db.Topics.Include("Category")
+
+                                  .Include("User")
+                                  .Where
+                                  (
+                                  topic => mergedIds.Contains(topic.Id)
+                                  )
+                                  .OrderByDescending(t => t.Date)
+                                  .ToList();
+                }
             ViewBag.SearchString = search;
             //AFISARE PAGINATA
             int _perPage = 3;
@@ -93,22 +131,39 @@ namespace OpenDiscussion.Controllers
             ViewBag.Topics = paginatedTopics;
             ViewBag.Title = "Subiectele care se potrivesc cautarii tale";
             ViewBag.PaginationBaseUrl = "/Categories/Index/?search="
-                + search + "&page";
+                + search + "&sortOrder=" + sortOrder + "&page";
         }
             return View();
         }
 
         [AllowAnonymous]
-        public ActionResult Show(int id)
+        public ActionResult Show(int id, string sortOrder)
         {
             Category category = db.Categories.Find(id);
-
-            ICollection<Topic>? topics = db.Topics.Include("Category")
+            ICollection<Topic>? topics;
+            if (sortOrder == "resp")
+            {
+                topics = db.Topics.Include("Category")
                                                   .Include("User")
                                                   .Where(top => top.CategoryId == id)
-                                                  .OrderBy(top => top.Date)
+                                                  .OrderByDescending(
+                                                        top =>
+                                                        db.Responses
+                                                        .Where(resp => resp.TopicId == top.Id)
+                                                        .Count()
+                                                        )
+                                                  .ThenByDescending(top => top.Date)
                                                   .ToList();
-            if (TempData.ContainsKey("message"))
+            }
+            else
+            {
+                topics = db.Topics.Include("Category")
+                                                  .Include("User")
+                                                  .Where(top => top.CategoryId == id)
+                                                  .OrderByDescending(top => top.Date)
+                                                  .ToList();
+            }
+                if (TempData.ContainsKey("message"))
             {
                 ViewBag.Msg = TempData["message"].ToString();
             }
@@ -130,15 +185,36 @@ namespace OpenDiscussion.Controllers
                             rsp => rsp.Content.Contains(search)
                             ).Select(r => (int)r.TopicId).ToList();
                 List<int> mergedIds = topicIds.Union(topicIdsOfResponsesWithSearchString).ToList();
-                topics = db.Topics.Include("Category")
+                if(sortOrder == "resp")
+                {
+                    topics = db.Topics.Include("Category")
                                   .Include("User")
                                   .Where
                                   (
                                   topic => mergedIds.Contains(topic.Id)
                                   && topic.CategoryId == id
                                   )
-                                  .OrderBy(t => t.Date)
+                                  .OrderByDescending(t => t.Date)
                                   .ToList();
+                }
+                else
+                {
+                    topics = db.Topics.Include("Category")
+                                  .Include("User")
+                                  .Where
+                                  (
+                                  topic => mergedIds.Contains(topic.Id)
+                                  && topic.CategoryId == id
+                                  )
+                                  .OrderByDescending(top =>
+                                                        db.Responses
+                                                        .Where(resp => resp.TopicId == top.Id)
+                                                        .Count()
+                                                        )
+                                  .ThenByDescending(top => top.Date)
+                                  .ToList();
+                }
+                
             }
             ViewBag.SearchString = search;
             //AFISARE PAGINATA
@@ -157,11 +233,11 @@ namespace OpenDiscussion.Controllers
             if (search != "")
             {
                 ViewBag.PaginationBaseUrl = "/Categories/Show/" + id + "?search="
-                + search + "&page";
+                + search + "&sortOrder="+sortOrder+"&page";
             }
             else
             {
-                ViewBag.PaginationBaseUrl = "/Categories/Show/" + id + "?page";
+                ViewBag.PaginationBaseUrl = "/Categories/Show/" + id + "?sortOrder="+sortOrder+"&page";
             }
             //category.Topics = (ICollection<Topic>?) paginatedTopics;
             return View();

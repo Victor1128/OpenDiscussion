@@ -16,6 +16,16 @@
 
 @if (ViewBag.SearchString != null)
 {
+    <table class="table">
+        <tr>
+            <th>
+                @Html.ActionLink("Numar de raspunsuri", "Index", new { sortOrder = "resp" })
+            </th>
+            <th>
+                @Html.ActionLink("Data", "Index", new { sortOrder = "date" })
+            </th>
+        </tr>
+    </table>
     @foreach (var top in ViewBag.Topics ?? new List<Topic>())
     {
     <div class="card">
