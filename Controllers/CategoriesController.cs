@@ -62,13 +62,13 @@ namespace OpenDiscussion.Controllers
                 ViewBag.Msg = TempData["message"].ToString();
             }
 
-            var search = "";
+            string search = null;
             
             // MOTOR DE CAUTARE
             
-            if (Convert.ToString(HttpContext.Request.Query["search"]) != null)
+            if (!String.IsNullOrWhiteSpace(HttpContext.Request.Query["search"]))
             {
-                search = Convert.ToString(HttpContext.Request.Query["search"]).Trim();
+                search = Convert.ToString(HttpContext.Request.Query["search"])?.Trim();
 
                 List<int> topicIds = db.Topics.Where
                                         (
@@ -80,7 +80,7 @@ namespace OpenDiscussion.Controllers
                             db.Responses.Where
                             (
                             rsp => rsp.Content.Contains(search)
-                            ).Select(r => (int)r.TopicId).ToList();
+                            ).Select(r => r.TopicId.GetValueOrDefault()).ToList();
 
                 List<int> mergedIds = topicIds.Union(topicIdsOfResponsesWithSearchString).ToList();
 
@@ -114,7 +114,7 @@ namespace OpenDiscussion.Controllers
             ViewBag.Topics = paginatedTopics;
             ViewBag.CategoryName = category.CategoryName;
 
-            if (search != "")
+            if (!String.IsNullOrWhiteSpace(search))
             {
                 ViewBag.PaginationBaseUrl = "/Categories/Show/" + id + "?search="
                 + search + "&page";
