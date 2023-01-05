@@ -70,9 +70,8 @@ namespace OpenDiscussion.Controllers
             {
                 ViewBag.Msg = TempData["message"].ToString();
             }
-            var search = "";
             // MOTOR DE CAUTARE
-                search = Convert.ToString(HttpContext.Request.Query["search"]).Trim();
+               var search = Convert.ToString(HttpContext.Request.Query["search"]).Trim();
 
                 List<int> topicIds = db.Topics.Where
                                         (
