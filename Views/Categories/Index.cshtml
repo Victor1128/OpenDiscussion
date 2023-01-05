@@ -14,7 +14,7 @@
     </div>
 </form>
 
-@if (ViewBag.SearchString != null)
+@if (Convert.ToString(ViewBag.SearchString) != null)
 {
     @foreach (var top in ViewBag.Topics ?? new List<Topic>())
     {
