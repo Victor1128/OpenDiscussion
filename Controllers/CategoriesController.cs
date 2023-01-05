@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using OpenDiscussion.Data;
 using OpenDiscussion.Models;
 using System.Data;
+using System.Text.RegularExpressions;
 
 namespace OpenDiscussion.Controllers
 {
@@ -50,12 +51,68 @@ namespace OpenDiscussion.Controllers
         {
             Category category = db.Categories.Find(id);
 
-            IQueryable<Topic> topics = db.Topics.Include("Category")
-                                                   .Include("User")
-                                                   .Where(top => top.CategoryId == id);
-            category.Topics = (ICollection<Topic>?)topics;
+            ICollection<Topic>? topics = db.Topics.Include("Category")
+                                                  .Include("User")
+                                                  .Where(top => top.CategoryId == id)
+                                                  .OrderBy(top => top.Date)
+                                                  .ToList();
+            if (TempData.ContainsKey("message"))
+            {
+                ViewBag.Msg = TempData["message"].ToString();
+            }
+            var search = "";
+            // MOTOR DE CAUTARE
+            if (Convert.ToString(HttpContext.Request.Query["search"]) != null)
+            {
+                search = Convert.ToString(HttpContext.Request.Query["search"]).Trim();
 
-            return View(category);
+                List<int> topicIds = db.Topics.Where
+                                        (
+                                        top => top.Title.Contains(search)
+                                              || top.Content.Contains(search)
+                                        ).Select(t => t.Id).ToList();
+
+                List<int> topicIdsOfResponsesWithSearchString =
+                            db.Responses.Where
+                            (
+                            rsp => rsp.Content.Contains(search)
+                            ).Select(r => (int)r.TopicId).ToList();
+                List<int> mergedIds = topicIds.Union(topicIdsOfResponsesWithSearchString).ToList();
+                topics = db.Topics.Include("Category")
+                                  .Include("User")
+                                  .Where
+                                  (
+                                  topic => mergedIds.Contains(topic.Id)
+                                  && topic.CategoryId == id
+                                  )
+                                  .OrderBy(t => t.Date)
+                                  .ToList();
+            }
+            ViewBag.SearchString = search;
+            //AFISARE PAGINATA
+            int _perPage = 3;
+            int totalItems = topics.Count();
+            var currentPage = Convert.ToInt32(HttpContext.Request.Query["page"]);
+            var offset  = 0;
+            if (!currentPage.Equals(0))
+            {
+                offset = (currentPage - 1) * _perPage;
+            }
+            var paginatedTopics = topics.Skip(offset).Take(_perPage);
+            ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
+            ViewBag.Topics = paginatedTopics;
+            ViewBag.CategoryName = category.CategoryName;
+            if (search != "")
+            {
+                ViewBag.PaginationBaseUrl = "/Categories/Show/" + id + "?search="
+                + search + "&page";
+            }
+            else
+            {
+                ViewBag.PaginationBaseUrl = "/Categories/Show/" + id + "?page";
+            }
+            //category.Topics = (ICollection<Topic>?) paginatedTopics;
+            return View();
         }
 
         [Authorize(Roles = "Admin")]

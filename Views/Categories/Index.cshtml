@@ -1,51 +1,45 @@
-﻿@{
+﻿<!--   --bs-dark: #212529; --bs-body-color: #212529; #202225 background-color: #42464D; --bs-dark-rgb: 33, 37, 41 -->
+
+@{
     ViewBag.Title = "Categorii";
 }
 
-<h2>@ViewBag.Title</h2>
+<h1 class="d-flex flex-row justify-content-center m-5 text-light">@ViewBag.Title</h1>
 
-<br /> 
-
-@if (ViewBag.Msg != null)
+@foreach (var category in ViewBag.Categories ?? new List<Category>())
 {
-    <h2 class="alert-success mb-5 text-center p-3">@ViewBag.Msg</h2>
-}
-
-<br />
-<br />
-<br />
-
-@foreach (var category in ViewBag.Categories)
-{
-        <a class="btn" href="/Categories/Show/@category.Id">@category.CategoryName</a>
+    <div class="card">    
+        <a class="btn btn-block" href="/Categories/Show/@category.Id">
+            <div class="card-body">
+                <h3 class="card-title py-3 px-3 rounded-2 text-light" style="background-color: var(--bs-dark) !important;">@category.CategoryName</h3>
+            </div>
+        </a>
 
         @if (User.IsInRole("Admin"))
         {
-
-        <br />
-
-        <a class="btn alert-success" href="/Categories/Edit/@category.Id">Editare categorie</a>
-        
-        <br/>
-
-        <form method="post" action="/Categories/Delete/@category.Id">
-            <button class="btn btn-danger" type="submit">Sterge categoria</button>
-        </form>
-
+            <div class="card-footer">
+                <div class="d-flex align-items-center">
+                    <div class="d-flex flex-fill justify-content-center align-items-center m-1">
+                        <a class="btn alert-success" href="/Categories/Edit/@category.Id">Editare categorie</a>
+                    </div>
+                
+                    <div class="d-flex flex-fill justify-content-center align-items-center m-1">
+                            <form method="post" action="/Categories/Delete/@category.Id">
+                                <button class="btn btn-danger" type="submit">Sterge categoria</button>
+                            </form>
+                    </div>
+                </div>
+            </div>
         }
 
-        <br />
-        <hr />
-        <br />
-}
+    </div>
 
-<br />
+    <br/>
+}
 
 @if(User.IsInRole("Admin"))
 {
-
-<a class="btn btn-success" href="/Categories/New">Adauga o noua categorie</a>
-
-<br />
-
+    <div class="d-flex align-items-center">
+        <a class="btn flex-fill alert-secondary" href="/Categories/New">Adauga o noua categorie</a>
+    </div>
 }

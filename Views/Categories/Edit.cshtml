@@ -4,20 +4,27 @@
     ViewBag.Title = "Edit";
 }
 
-<h2>@ViewBag.Title</h2>
+<h1 class="d-flex flex-row justify-content-center m-5 text-light">Editare categorie</h1>
 
-<form method="post" action="/Categories/Edit/@Model.Id">
+<div class="card">
+    <form method="post" action="/Categories/Edit/@Model.Id">
+        <div class="card">
+            @Html.Label("CategoryName", "Denumire categorie", new { @style ="background-color: var(--bs-dark) !important;", 
+                                                                    @class = "py-3 px-3 rounded-2 d-flex align-items-center justify-content-center text-light m-2"})
+            
+            <br />
 
-    @Html.Label("CategoryName", "Denumire categorie")
+            @Html.ValidationSummary(false, "", new { @class = "text-danger d-flex align-items-center justify-content-center" })
 
-    <br /> 
+            <div class="card-body d-flex justify-content-center align-items-center">
+                @Html.Editor("CategoryName", new {@class = "flex-fill"})
+            </div>
 
-    @Html.Editor("CategoryName")
+            @Html.ValidationMessageFor(m => m.CategoryName, null, new { @class = "text-danger d-flex align-items-center justify-content-center" })
 
-    @Html.ValidationMessageFor(m => m.CategoryName, null, new { @class = "text-danger" })
+            <br />
 
-    <br />
-    <br />
-
-    <button class="btn btn-success" type="submit">Modifica categoria</button>
-</form>
+            <button class="btn btn-success m-2" type="submit">Modifica categoria</button>
+        </div>
+    </form>
+</div>

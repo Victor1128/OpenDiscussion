@@ -1,10 +1,11 @@
 ﻿<div class="card-body">
-    <h3 class="card-title alert-success py-3 px-3 rounded-2">@Model.Title</h3>
+    <h3 class="card-title d-flex py-3 px-3 rounded-2 text-light justify-content-center align-items-center" style="background-color: var(--bs-dark) !important;">@Model.Title</h3>
+    
     <div class="card-text p-3">@Model.Content</div>
 
-    <div class="d-flex flex-row justify-content-between mt-5">
-        <div class="d-flex justify-content-center align-items-center mb-0"><i class="bi bi-globe px-2"></i>@Model.Category.CategoryName</div>
-        <div class="d-flex justify-content-center align-items-center mb-0"><i class="bi bi-person px-2"></i>@Model.User.UserName</div>
-        <span class="alert d-flex justify-content-center align-items-center mb-0">@Model.Date</span>
+    <div class="card-footer rounded-2 d-flex align-items-center">
+            <div class="d-flex flex-fill justify-content-center align-items-center"><i class="bi bi-globe text-dark px-2"></i>@Model.Category.CategoryName</div>
+            <div class="d-flex flex-fill justify-content-center align-items-center"><i class="bi bi-person text-dark px-2"></i>@Model.User.UserName</div>
+            <div class="d-flex flex-fill justify-content-center align-items-center">@Model.Date</div>
     </div>
 </div>

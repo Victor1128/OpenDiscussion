@@ -27,7 +27,7 @@ namespace OpenDiscussion.Controllers
             _roleManager = roleManager;
         }
 
-        [Authorize(Roles = "User,Moderator,Admin")]
+        [AllowAnonymous]
         public IActionResult Show(int id)
         {
             Topic top = db.Topics.Include("Category")
@@ -42,20 +42,21 @@ namespace OpenDiscussion.Controllers
             return View(top);
         }
 
+        [NonAction]
         private void SetAccessRights()
         {
             ViewBag.AfisareButoane = false;
 
-            if (User.IsInRole("Moderator"))
+            if (User.IsInRole("Moderator") || User.IsInRole("Admin"))
             {
                 ViewBag.AfisareButoane = true;
             }
 
             ViewBag.UserCurent = _userManager.GetUserId(User);
-            ViewBag.EsteAdmin = User.IsInRole("Admin");
         }
 
         [HttpPost]
+        [Authorize(Roles = "User,Moderator,Admin")]
         public IActionResult Show([FromForm] Response resp) 
         {
             resp.Date = DateTime.Now;
@@ -123,7 +124,7 @@ namespace OpenDiscussion.Controllers
 
             top.Categ = GetAllCategories();
 
-            if (top.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            if (top.UserId == _userManager.GetUserId(User) || User.IsInRole("Moderator") || User.IsInRole("Admin"))
             {
                 return View(top);
             }
@@ -142,7 +143,7 @@ namespace OpenDiscussion.Controllers
 
             if (ModelState.IsValid)
             {
-                if (top.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+                if (top.UserId == _userManager.GetUserId(User) || User.IsInRole("Moderator") || User.IsInRole("Admin"))
                 {
                     top.Title = requestTopic.Title;
                     top.Content = requestTopic.Content;
@@ -176,7 +177,7 @@ namespace OpenDiscussion.Controllers
                                  .Where(top => top.Id == id)
                                  .First();
 
-            if (top.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            if (top.UserId == _userManager.GetUserId(User) || User.IsInRole("Moderator")  || User.IsInRole("Admin"))
             {
                 var categId = top.CategoryId;
                 db.Topics.Remove(top);

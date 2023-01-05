@@ -4,49 +4,59 @@
     ViewBag.Title = "Edit";
 }
 
+<h1 class="d-flex flex-row justify-content-center m-5 text-light">Editare Topic</h1>
+
 @using (Html.BeginForm(actionName: "Edit", controllerName: "Topics"))
 {
+    <div class="card p-2">
 
-    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        @Html.Label("Title", "Titlu Topic", new { @style = "background-color: var(--bs-dark) !important;",
+                                                              @class = "py-3 px-3 rounded-2 d-flex align-items-center justify-content-center text-light m-2"})
 
-    @Html.Label("Title", "Titlu Topic")
+        <br />
 
-    <br />
+        @Html.ValidationSummary(false, "", new { @class = "text-danger d-flex align-items-center justify-content-center" })
 
-    @Html.EditorFor(m => m.Title, new { htmlAttributes = new { @class = "form-control" } })
+        <br/>
 
-    @Html.ValidationMessageFor(m => m.Title, null, new {@class = "text-danger" })
+        @Html.EditorFor(m => m.Title, new { htmlAttributes = new { @style = "width:90%; box-sizing:border-box !important;", @class = "form-control d-flex align-items-center justify-content-center m-auto" } })
 
-    <br />
+        <br />
 
-    <br />
+        @Html.ValidationMessageFor(m => m.Title, null, new {@class = "text-danger d-flex align-items-center justify-content-center" })
 
-    @Html.Label("Content", "Continut Topic")
+        <br />
 
-    <br />
+        @Html.Label("Content", "Continut Topic", new { @style ="background-color: var(--bs-dark) !important;",
+                                                       @class = "py-3 px-3 rounded-2 d-flex align-items-center justify-content-center text-light m-2"})
 
-    @Html.Editor("Content", new { htmlAttributes = new { @class = "form-control" } })
+        <br />
 
-    @Html.ValidationMessage("Content", null, new { @class = "text-danger" })
+        @Html.Editor("Content", new { htmlAttributes = new { @style = "width:90%; box-sizing:border-box !important;", @class = "form-control d-flex align-items-center justify-content-center m-auto" } })
 
-    <br />
+        <br />
 
-    <br />
+        @Html.ValidationMessage("Content", null, new { @class = "text-danger d-flex align-items-center justify-content-center" })
 
-    @Html.HiddenFor(m => m.Date)
+        <br />
 
-    <label>Selectati categoria</label>
+        @Html.HiddenFor(m => m.Date)
 
-    @Html.DropDownListFor(m => m.CategoryId,
-    new SelectList(Model.Categ, "Value", "Text"),
-    "Selectati categoria", new { @class = "form-control" })
+        <label class="py-3 px-3 rounded-2 d-flex align-items-center justify-content-center text-light m-2" style="background-color: var(--bs-dark) !important;">Selectati categoria</label>
 
-    @Html.ValidationMessageFor(m => m.CategoryId, null, new { @class = "text-danger" })
+        <br />
 
-    <br />
+        @Html.DropDownListFor(m => m.CategoryId, new
+        SelectList(Model.Categ, "Value", "Text"), "Selectati categoria",
+        new { @style ="width:90%; box-sizing:border-box !important;",
+        @class = "form-control d-flex align-items-center justify-content-center m-auto" })
 
-    <button class="btn btn-sm btn-success" type="submit">Modifica Topic</button>
+        <br />
 
+        @Html.ValidationMessageFor(m => m.CategoryId, null, new { @class = "text-danger d-flex align-items-center justify-content-center" })
+
+        <br />
+
+        <button class="btn btn-sm btn-success m-2" type="submit">Modifica Topic</button>
+    </div>
 }
-
-
