@@ -92,16 +92,8 @@ namespace OpenDiscussion.Controllers
             ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
             ViewBag.Topics = paginatedTopics;
             ViewBag.Title = "Subiectele care se potrivesc cautarii tale";
-            if (search != "")
-            {
-                ViewBag.PaginationBaseUrl = "/Categories/Index/?search="
+            ViewBag.PaginationBaseUrl = "/Categories/Index/?search="
                 + search + "&page";
-            }
-            else
-            {
-                ViewBag.PaginationBaseUrl = "/Categories/Index/?page";
-            }
-            //category.Topics = (ICollection<Topic>?) paginatedTopics;
         }
             return View();
         }
