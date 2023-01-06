@@ -43,6 +43,7 @@ namespace OpenDiscussion.Controllers
             {
                 ViewBag.Msg = TempData["message"].ToString();
             }
+
             if (Convert.ToString(HttpContext.Request.Query["search"]) != null)
             {
                 ICollection<Topic>? topics;
@@ -88,7 +89,6 @@ namespace OpenDiscussion.Controllers
                 if (sortOrder == "resp")
                 {
                     topics = db.Topics.Include("Category")
-
                                   .Include("User")
                                   .Where
                                   (
@@ -106,8 +106,6 @@ namespace OpenDiscussion.Controllers
                 else
                 {
                     topics = db.Topics.Include("Category")
-
-
                                   .Include("User")
                                   .Where
                                   (
@@ -129,12 +127,9 @@ namespace OpenDiscussion.Controllers
             var paginatedTopics = topics.Skip(offset).Take(_perPage);
             ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
             ViewBag.Topics = paginatedTopics;
-            ViewBag.Title = "Subiectele care se potrivesc cautarii tale";
-
             ViewBag.PaginationBaseUrl = "/Categories/Index/?search="
                 + search + "&sortOrder=" + sortOrder + "&page";
         }
-
             return View();
         }
 
@@ -235,7 +230,7 @@ namespace OpenDiscussion.Controllers
             ViewBag.Topics = paginatedTopics;
             ViewBag.CategoryName = category.CategoryName;
 
-            if (!String.IsNullOrWhiteSpace(search))
+            if (!String.IsNullOrWhiteSpace(HttpContext.Request.Query["search"]))
             {
                 ViewBag.PaginationBaseUrl = "/Categories/Show/" + id + "?search="
                 + search + "&sortOrder="+sortOrder+"&page";
