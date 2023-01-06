@@ -50,12 +50,15 @@ namespace OpenDiscussion.Controllers
                                                     .OrderBy(top => top.Date)
                                                     .ToList();
 
+            ViewBag.Title = "Categorii";
+
             string search = null;
 
             // MOTOR DE CAUTARE
 
             if (!String.IsNullOrWhiteSpace(HttpContext.Request.Query["search"]))
             {
+                ViewBag.Title = "Subiectele care se potrivesc cautarii tale";
 
                 search = Convert.ToString(HttpContext.Request.Query["search"]).Trim();
 
@@ -83,7 +86,7 @@ namespace OpenDiscussion.Controllers
                                     .ToList();
             }
 
-            ViewBag.SearchString = search;
+            
 
             //AFISARE PAGINATA
 
@@ -100,15 +103,16 @@ namespace OpenDiscussion.Controllers
             var paginatedTopics = topics.Skip(offset).Take(_perPage);
             ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
             ViewBag.Topics = paginatedTopics;
-            ViewBag.Title = "Subiectele care se potrivesc cautarii tale";
 
-            if (search != "")
+            if (!String.IsNullOrWhiteSpace(HttpContext.Request.Query["search"]))
             {
-                ViewBag.PaginationBaseUrl = "/Categories/Index/?search="
-                + search + "&page";
+                ViewBag.SearchString = search;
+                ViewBag.PaginationBaseUrl = "/Categories/Index/?search=" + search + "&page";
+
             }
             else
             {
+                ViewBag.SearchString = null;
                 ViewBag.PaginationBaseUrl = "/Categories/Index/?page";
             }
 
@@ -185,10 +189,9 @@ namespace OpenDiscussion.Controllers
             ViewBag.Topics = paginatedTopics;
             ViewBag.CategoryName = category.CategoryName;
 
-            if (!String.IsNullOrWhiteSpace(search))
+            if (!String.IsNullOrWhiteSpace(HttpContext.Request.Query["search"]))
             {
-                ViewBag.PaginationBaseUrl = "/Categories/Show/" + id + "?search="
-                + search + "&page";
+                ViewBag.PaginationBaseUrl = "/Categories/Show/" + id + "?search=" + search + "&page";
             }
             else
             {
