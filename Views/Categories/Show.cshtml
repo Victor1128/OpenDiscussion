@@ -13,56 +13,67 @@
                placeholder="Search topics or keywords" name="search"
                value="@ViewBag.SearchString">
 
-        <button class="btn btn-outline-success" type="submit">Search</button>
+        <button class="btn btn-outline-success"
+                type="submit">
+            Search
+        </button>
     </div>
 </form>
-
-<br />
-<br />
+<table class="table">
+<tr>
+    <th>
+            @Html.ActionLink("Numar de raspunsuri", "Show", new { search = ViewBag.SearchString, sortOrder = "resp",  })
+    </th>
+    <th>
+            @Html.ActionLink("Data", "Show", new { search = ViewBag.SearchString, sortOrder = "date" })
+    </th>
+</tr>
+</table>
 
 @foreach (var top in ViewBag.Topics ?? new List<Topic>())
 {
     <div class="card">
         <a class="btn btn-block" href="/Topics/Show/@top.Id">
-            <div class="card-body">
-                <h5 class="card-title py-3 px-3 m-0 rounded-2 text-light" style="background-color: var(--bs-dark) !important;">@top.Title</h5>
-            </div>
+
+           @top.Title
         </a>
     </div>
 
-    <br/>
+    <br />
+    <br />
 
 }
-
-<div>
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            <li class="page-item">
-                <a class="page-link"
-                href="@ViewBag.PaginationBaseUrl=1" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-
-            @for (int i = 1; i <= ViewBag.lastPage; i++)
-            {
+    <div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
                 <li class="page-item">
                     <a class="page-link"
-                href="@ViewBag.PaginationBaseUrl=@i">@(i)</a>
+                   href="@ViewBag.PaginationBaseUrl=1" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
                 </li>
-            }
+                @for (int i = 1; i <= ViewBag.lastPage; i++)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                   href="@ViewBag.PaginationBaseUrl=@i">@(i)</a>
+                    </li>
+                }
+                <li class="page-item">
+                    <a class="page-link"
+                   href="@ViewBag.PaginationBaseUrl=@(ViewBag.lastPage)" aria-
+                   label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 
-            <li class="page-item">
-                <a class="page-link"
-                href="@ViewBag.PaginationBaseUrl=@(ViewBag.lastPage)" aria-
-                label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</div>
 
-<br/>
+    <br/>
+    <br/>
+<br />
+
 <hr />
 <br />

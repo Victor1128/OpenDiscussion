@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -30,7 +30,7 @@ namespace OpenDiscussion.Controllers
 
         [AllowAnonymous]
         //[Authorize(Roles = "User,Moderator,Admin")]
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder)
         {
             var categories = from category in db.Categories
                              orderby category.CategoryName
@@ -44,105 +44,35 @@ namespace OpenDiscussion.Controllers
                 ViewBag.Msg = TempData["message"].ToString();
             }
 
-
-            ICollection<Topic>? topics = db.Topics.Include("Category")
-                                                    .Include("User")
-                                                    .OrderBy(top => top.Date)
-                                                    .ToList();
-
-            ViewBag.Title = "Categorii";
-
-            string search = null;
-
-            // MOTOR DE CAUTARE
-
-            if (!String.IsNullOrWhiteSpace(HttpContext.Request.Query["search"]))
+            if (Convert.ToString(HttpContext.Request.Query["search"]) != null)
             {
-                ViewBag.Title = "Subiectele care se potrivesc cautarii tale";
-
-                search = Convert.ToString(HttpContext.Request.Query["search"]).Trim();
-
-                List<int> topicIds = db.Topics.Where
-                                        (
-                                        top => top.Title.Contains(search)
-                                                || top.Content.Contains(search)
-                                        ).Select(t => t.Id).ToList();
-
-                List<int> topicIdsOfResponsesWithSearchString =
-                            db.Responses.Where
-                            (
-                            rsp => rsp.Content.Contains(search)
-                            ).Select(r => r.TopicId.GetValueOrDefault()).ToList();
-
-                List<int> mergedIds = topicIds.Union(topicIdsOfResponsesWithSearchString).ToList();
-
-                topics = db.Topics.Include("Category")
-                                    .Include("User")
-                                    .Where
-                                    (
-                                    topic => mergedIds.Contains(topic.Id)
-                                    )
-                                    .OrderBy(t => t.Date)
-                                    .ToList();
-
-            }
-
-            //AFISARE PAGINATA
-
-            int _perPage = 3;
-            int totalItems = topics.Count();
-            var currentPage = Convert.ToInt32(HttpContext.Request.Query["page"]);
-            var offset = 0;
-
-            if (!currentPage.Equals(0))
-            {
-                offset = (currentPage - 1) * _perPage;
-            }
-
-            var paginatedTopics = topics.Skip(offset).Take(_perPage);
-            ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
-            ViewBag.Topics = paginatedTopics;
-
-            if (!String.IsNullOrWhiteSpace(HttpContext.Request.Query["search"]))
-            {
-                ViewBag.SearchString = search;
-                ViewBag.PaginationBaseUrl = "/Categories/Index/?search=" + search + "&page";
-
-            }
-            else
-            {
-                ViewBag.SearchString = null;
-                ViewBag.PaginationBaseUrl = "/Categories/Index/?page";
-            }
-
-            //category.Topics = (ICollection<Topic>?) paginatedTopics;
-
-            return View();
-        }
-
-        [AllowAnonymous]
-        public ActionResult Show(int id)
-        {
-            Category category = db.Categories.Find(id);
-
-            ICollection<Topic>? topics = db.Topics.Include("Category")
+                ICollection<Topic>? topics;
+                if (sortOrder == "resp")
+                {
+                    topics = db.Topics.Include("Category")
                                                   .Include("User")
-                                                  .Where(top => top.CategoryId == id)
-                                                  .OrderBy(top => top.Date)
+                                                  .OrderByDescending(
+                                                        top =>
+                                                        db.Responses
+                                                        .Where(resp => resp.TopicId == top.Id)
+                                                        .Count()
+                                                        )
+                                                  .ThenByDescending(top => top.Date)
                                                   .ToList();
-
+                }
+                else
+                {
+                    topics = db.Topics.Include("Category")
+                                                  .Include("User")
+                                                  .OrderByDescending(top => top.Date)
+                                                  .ToList();
+                }
             if (TempData.ContainsKey("message"))
             {
                 ViewBag.Msg = TempData["message"].ToString();
             }
-
-            string search = null;
-            
             // MOTOR DE CAUTARE
-            
-            if (!String.IsNullOrWhiteSpace(HttpContext.Request.Query["search"]))
-            {
-                search = Convert.ToString(HttpContext.Request.Query["search"])?.Trim();
+               var search = Convert.ToString(HttpContext.Request.Query["search"]).Trim();
 
                 List<int> topicIds = db.Topics.Where
                                         (
@@ -154,30 +84,142 @@ namespace OpenDiscussion.Controllers
                             db.Responses.Where
                             (
                             rsp => rsp.Content.Contains(search)
-                            ).Select(r => r.TopicId.GetValueOrDefault()).ToList();
-
+                            ).Select(r => (int)r.TopicId).ToList();
                 List<int> mergedIds = topicIds.Union(topicIdsOfResponsesWithSearchString).ToList();
-
-                topics = db.Topics.Include("Category")
+                if (sortOrder == "resp")
+                {
+                    topics = db.Topics.Include("Category")
                                   .Include("User")
                                   .Where
                                   (
                                   topic => mergedIds.Contains(topic.Id)
-                                  && topic.CategoryId == id
                                   )
-                                  .OrderBy(t => t.Date)
+                                  .OrderByDescending(
+                                                    top =>
+                                                    db.Responses
+                                                    .Where(resp => resp.TopicId == top.Id)
+                                                    .Count()
+                                                    )
+                                  .ThenByDescending(top => top.Date)
                                   .ToList();
-            }
-
+                }
+                else
+                {
+                    topics = db.Topics.Include("Category")
+                                  .Include("User")
+                                  .Where
+                                  (
+                                  topic => mergedIds.Contains(topic.Id)
+                                  )
+                                  .OrderByDescending(t => t.Date)
+                                  .ToList();
+                }
             ViewBag.SearchString = search;
-
             //AFISARE PAGINATA
-
             int _perPage = 3;
             int totalItems = topics.Count();
             var currentPage = Convert.ToInt32(HttpContext.Request.Query["page"]);
             var offset  = 0;
+            if (!currentPage.Equals(0))
+            {
+                offset = (currentPage - 1) * _perPage;
+            }
+            var paginatedTopics = topics.Skip(offset).Take(_perPage);
+            ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
+            ViewBag.Topics = paginatedTopics;
+            ViewBag.PaginationBaseUrl = "/Categories/Index/?search="
+                + search + "&sortOrder=" + sortOrder + "&page";
+        }
+            return View();
+        }
 
+        [AllowAnonymous]
+        public ActionResult Show(int id, string sortOrder)
+        {
+            Category category = db.Categories.Find(id);
+            ICollection<Topic>? topics;
+            if (sortOrder == "resp")
+            {
+                topics = db.Topics.Include("Category")
+                                                  .Include("User")
+                                                  .Where(top => top.CategoryId == id)
+                                                  .OrderByDescending(
+                                                        top =>
+                                                        db.Responses
+                                                        .Where(resp => resp.TopicId == top.Id)
+                                                        .Count()
+                                                        )
+                                                  .ThenByDescending(top => top.Date)
+                                                  .ToList();
+            }
+            else
+            {
+                topics = db.Topics.Include("Category")
+                                                  .Include("User")
+                                                  .Where(top => top.CategoryId == id)
+                                                  .OrderByDescending(top => top.Date)
+                                                  .ToList();
+            }
+                if (TempData.ContainsKey("message"))
+            {
+                ViewBag.Msg = TempData["message"].ToString();
+            }
+            var search = "";
+            // MOTOR DE CAUTARE
+            if (Convert.ToString(HttpContext.Request.Query["search"]) != null)
+            {
+                search = Convert.ToString(HttpContext.Request.Query["search"]).Trim();
+
+                List<int> topicIds = db.Topics.Where
+                                        (
+                                        top => top.Title.Contains(search)
+                                              || top.Content.Contains(search)
+                                        ).Select(t => t.Id).ToList();
+
+
+                List<int> topicIdsOfResponsesWithSearchString =
+                            db.Responses.Where
+                            (
+                            rsp => rsp.Content.Contains(search)
+                            ).Select(r => r.TopicId.GetValueOrDefault()).ToList();
+                List<int> mergedIds = topicIds.Union(topicIdsOfResponsesWithSearchString).ToList();
+                if(sortOrder == "resp")
+                {
+                    topics = db.Topics.Include("Category")
+                                .Include("User")
+                                .Where
+                                (
+                                topic => mergedIds.Contains(topic.Id)
+                                && topic.CategoryId == id
+                                )
+                                .OrderByDescending(top =>
+                                                      db.Responses
+                                                      .Where(resp => resp.TopicId == top.Id)
+                                                      .Count()
+                                                      )
+                                .ThenByDescending(top => top.Date)
+                                .ToList();
+                }
+                else
+                {
+                    topics = db.Topics.Include("Category")
+                                   .Include("User")
+                                   .Where
+                                   (
+                                   topic => mergedIds.Contains(topic.Id)
+                                   && topic.CategoryId == id
+                                   )
+                                   .OrderByDescending(t => t.Date)
+                                   .ToList();
+                }
+
+            }
+            ViewBag.SearchString = search;
+            //AFISARE PAGINATA
+            int _perPage = 3;
+            int totalItems = topics.Count();
+            var currentPage = Convert.ToInt32(HttpContext.Request.Query["page"]);
+            var offset  = 0;
             if (!currentPage.Equals(0))
             {
                 offset = (currentPage - 1) * _perPage;
@@ -190,15 +232,13 @@ namespace OpenDiscussion.Controllers
 
             if (!String.IsNullOrWhiteSpace(HttpContext.Request.Query["search"]))
             {
-                ViewBag.PaginationBaseUrl = "/Categories/Show/" + id + "?search=" + search + "&page";
+                ViewBag.PaginationBaseUrl = "/Categories/Show/" + id + "?search="
+                + search + "&sortOrder="+sortOrder+"&page";
             }
             else
             {
-                ViewBag.PaginationBaseUrl = "/Categories/Show/" + id + "?page";
+                ViewBag.PaginationBaseUrl = "/Categories/Show/" + id + "?sortOrder="+sortOrder+"&page";
             }
-
-            //category.Topics = (ICollection<Topic>?) paginatedTopics;
-
             return View();
         }
 
