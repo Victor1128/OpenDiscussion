@@ -25,3 +25,15 @@ body {
 .validation-summary-valid {
     display: none;
 }
+
+.pagination a:hover {
+    background-color: var(--bs-gray-600) !important;
+    transition: background-color .2s;
+}
+
+.dropdown-menu-center {
+    left: 50% !important;
+    right: auto !important;
+    text-align: center !important;
+    transform: translate(-50%, 60%) !important;
+}
