@@ -84,9 +84,8 @@ namespace OpenDiscussion.Controllers
                                     )
                                     .OrderBy(t => t.Date)
                                     .ToList();
-            }
 
-            
+            }
 
             //AFISARE PAGINATA
 
