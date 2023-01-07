@@ -1,0 +1,30 @@
+﻿@model OpenDiscussion.Models.Category
+
+@{
+    ViewBag.Title = "New";
+}
+
+<h1 class="d-flex flex-row justify-content-center m-5 text-light">Adaugare Categorie</h1>
+
+@using (Html.BeginForm(actionName: "New", controllerName: "Categories", method: FormMethod.Post))
+{
+    <div class="card">
+        
+        @Html.Label("CategoryName", "Denumire categorie", new { @style ="background-color: var(--bs-dark) !important;",
+                                                                @class = "py-3 px-3 rounded-2 d-flex align-items-center justify-content-center text-light m-2"})
+        
+        <br />
+
+        @Html.ValidationSummary(false, "", new { @class = "text-danger d-flex align-items-center justify-content-center" })
+
+        <div class="card-body d-flex justify-content-center align-items-center">
+            @Html.TextBox("CategoryName", null, new { @class = "form-control flex-fill" })
+        </div>
+
+        @Html.ValidationMessageFor(m => m.CategoryName, null, new { @class = "text-danger d-flex align-items-center justify-content-center" })
+
+        <br />
+
+        <button class="btn btn-success m-2" type="submit">Adauga categorie</button>
+    </div>
+}

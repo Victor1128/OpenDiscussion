@@ -1,0 +1,27 @@
+﻿@model OpenDiscussion.Models.Response
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h1 class="d-flex flex-row justify-content-center m-5 text-light">Editare Raspuns</h1>
+
+<div class="card">
+    <form method="post" action="/Responses/Edit/@Model.Id">
+        <div class="card p-2">
+            <label class="p-2 rounded-2 d-flex align-items-center justify-content-center text-light" style="background-color: var(--bs-dark) !important;">Continut raspuns</label>
+
+            <br />
+
+            <textarea class="form-control d-flex align-items-center justify-content-center m-auto" style="width:90%; box-sizing:border-box !important;" name="Content">@Model.Content</textarea>
+
+            <br />
+
+            @Html.ValidationMessageFor(m => m.Content, null, new { @class = "text-danger d-flex align-items-center justify-content-center" })
+
+            <br />
+
+            <button class="btn btn-sm btn-success m-2" type="submit">Editeaza raspuns</button>
+        </div>
+    </form>
+</div>
