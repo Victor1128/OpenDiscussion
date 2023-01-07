@@ -105,7 +105,7 @@ namespace OpenDiscussion.Controllers
             {
                 db.Topics.Add(top);
                 db.SaveChanges();
-                TempData["message"] = "Topicul a fost adaugat";
+                TempData["message"] = "Topicul a fost adaugat cu succes!";
                 return RedirectToAction("Show", "Categories", new { id = top.CategoryId });
             }
             else
@@ -151,7 +151,7 @@ namespace OpenDiscussion.Controllers
                     top.CategoryId = requestTopic.CategoryId;
                     db.SaveChanges();
 
-                    TempData["message"] = "Articolul a fost modificat";
+                    TempData["message"] = "Articolul a fost modificat cu succes!";
 
                     return RedirectToAction("Show", "Categories", new { id = top.CategoryId });
                 }
@@ -182,7 +182,7 @@ namespace OpenDiscussion.Controllers
                 var categId = top.CategoryId;
                 db.Topics.Remove(top);
                 db.SaveChanges();
-                TempData["message"] = "Articolul a fost sters";
+                TempData["message"] = "Articolul a fost sters cu succes!";
                 return RedirectToAction("Show", "Categories", new { id =  categId});
             }
             else

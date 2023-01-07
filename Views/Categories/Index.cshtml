@@ -2,6 +2,25 @@
 
 <h1 class="d-flex flex-row justify-content-center m-5 text-light">@ViewBag.Title</h1>
 
+<div id="alertmsg" class="alert alert-info alert-dismissible show fade mt-1 text-center d-none" data-timeout="3000">
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <strong>@ViewBag.AlertMsg</strong>
+</div>
+
+@if (!String.IsNullOrEmpty(ViewBag.AlertMsg))
+{
+    <script type="text/javascript">
+        document.getElementById('alertmsg').classList.remove('d-none');
+
+        let alert_timeout = parseInt(document.getElementById('alertmsg').getAttribute('data-timeout'));
+
+        setTimeout(() => {
+            document.getElementById('alertmsg').classList.add('d-none');
+        }, alert_timeout);
+
+    </script>
+}
+
 @if (!String.IsNullOrEmpty(ViewBag.SearchString))
 {
 
