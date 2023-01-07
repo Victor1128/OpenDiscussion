@@ -21,8 +21,8 @@
     </script>
 }
 
-@if (!String.IsNullOrEmpty(ViewBag.SearchString))
-{
+
+
     <div class="d-flex flex-row justify-content-between align-items-center">
 
         <div class="flex-fill">
@@ -45,28 +45,24 @@
                 new { @class="dropdown-item" })
                 </li>
                 <li>
-                    @Html.ActionLink("Data", "Show", new {search = ViewBag.SearchString, sortOrder = "date" } ,
+                    @Html.ActionLink("Cele mai noi", "Show", new {search = ViewBag.SearchString, sortOrder = "date" } ,
                 new { @class="dropdown-item" })
                 </li>
+                <li>
+                    @Html.ActionLink("Nume", "Show", new {search = ViewBag.SearchString, sortOrder = "name" } ,
+                new { @class="dropdown-item" })
+                </li>
+            <li>
+                @Html.ActionLink("Lungimea continutului", "Show", new {search = ViewBag.SearchString, sortOrder = "length" } ,
+                new { @class="dropdown-item" })
+            </li>
             </ul>
         </div>
     </div>
 
     <br />
-}
-else
-{
-    <form method="GET">
-        <div class="input-group mb-3">
-            <input type="text" class="form-control"
-               placeholder="Search topics or keywords" name="search"
-               value="@ViewBag.SearchString">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-        </div>
-    </form>
 
-    <br />
-}
+
 
 @foreach (var top in ViewBag.Topics ?? new List<Topic>())
 {
