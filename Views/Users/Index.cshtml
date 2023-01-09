@@ -1,13 +1,16 @@
-﻿
-@{    
+﻿@{    
     ViewBag.Title = "Utilizatori";
 }
+
 <h1 class="d-flex flex-row justify-content-center m-5 text-light">@ViewBag.Title</h1>
+
 @foreach (var user in ViewBag.Users ){
-    <div class="card mb-3">
-            <div class="d-flex align-items-center">
-                <h3 class="d-flex flex-fill justify-content-center align-items-center m-1 card-title py-3 px-3 rounded-2 text-light" style="background-color: var(--bs-dark) !important;">@user.UserName</h3>  
-            </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title d-flex flex-fill justify-content-center align-items-center py-3 px-3 rounded-2 text-light" style="background-color: var(--bs-dark) !important;">@user.UserName</h3>
+        </div>
+
         <div class="card-footer">
             <div class="d-flex align-items-center">
                 <div class="d-flex flex-fill justify-content-center align-items-center m-1">
@@ -22,6 +25,8 @@
             </div>
         </div>
     </div>
+
+    <br/>
 }
 
 
