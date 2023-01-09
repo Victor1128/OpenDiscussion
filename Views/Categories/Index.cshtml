@@ -46,7 +46,15 @@
                 new { @class="dropdown-item" })
                 </li>
                 <li>
-                    @Html.ActionLink("Data", "Index", new {search = ViewBag.SearchString, sortOrder = "date" } ,
+                    @Html.ActionLink("Cele mai noi", "Index", new {search = ViewBag.SearchString, sortOrder = "date" } ,
+                new { @class="dropdown-item" })
+                </li>
+                <li>
+                    @Html.ActionLink("Nume", "Index", new {search = ViewBag.SearchString, sortOrder = "name" } ,
+                new { @class="dropdown-item" })
+                </li>
+                <li>
+                    @Html.ActionLink("Lungimea continutului", "Index", new {search = ViewBag.SearchString, sortOrder = "length" } ,
                 new { @class="dropdown-item" })
                 </li>
 		    </ul>

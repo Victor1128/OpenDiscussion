@@ -47,25 +47,38 @@ namespace OpenDiscussion.Controllers
             if (!String.IsNullOrEmpty(HttpContext.Request.Query["search"]) && !String.IsNullOrWhiteSpace(HttpContext.Request.Query["search"]))
             {
                 ICollection<Topic>? topics;
-                if (sortOrder == "resp")
+                switch (sortOrder)
                 {
-                    topics = db.Topics.Include("Category")
-                                      .Include("User")
-                                      .OrderByDescending(
-                                                        top =>
-                                                        db.Responses
-                                                        .Where(resp => resp.TopicId == top.Id)
-                                                        .Count()
-                                                        )
-                                      .ThenByDescending(top => top.Date)
-                                      .ToList();
-                }
-                else
-                {
-                    topics = db.Topics.Include("Category")
+                    case "resp":
+                        topics = db.Topics.Include("Category")
+                                          .Include("User")
+                                          .OrderByDescending(
+                                                            top =>
+                                                            db.Responses
+                                                            .Where(resp => resp.TopicId == top.Id)
+                                                            .Count()
+                                                            )
+                                          .ThenByDescending(top => top.Date)
+                                          .ToList();
+                        break;
+                    case "name":
+                        topics = db.Topics.Include("Category")
+                                     .Include("User")
+                                     .OrderBy(top => top.Title)
+                                     .ToList();
+                        break;
+                    case "length":
+                        topics = db.Topics.Include("Category")
+                                     .Include("User")
+                                     .OrderByDescending(top => top.Content.Length)
+                                     .ToList();
+                        break;
+                    default:
+                        topics = db.Topics.Include("Category")
                                       .Include("User")
                                       .OrderByDescending(top => top.Date)
                                       .ToList();
+                        break;
                 }
 
                 // MOTOR DE CAUTARE
@@ -82,30 +95,14 @@ namespace OpenDiscussion.Controllers
 
                 List<int> mergedIds = topicIds.Union(topicIdsOfResponsesWithSearchString).ToList();
 
-                if (sortOrder == "resp")
+                List<Topic> finalTopics = new List<Topic>();
+                
+                foreach (var topic in topics)
                 {
-                    topics = db.Topics.Include("Category")
-                                      .Include("User")
-                                      .Where(topic => mergedIds.Contains(topic.Id))
-                                      .OrderByDescending(
-                                                    top =>
-                                                    db.Responses
-                                                    .Where(resp => resp.TopicId == top.Id)
-                                                    .Count()
-                                                    )
-                                      .ThenByDescending(top => top.Date)
-                                      .ToList();
+                    if (mergedIds.Contains(topic.Id))
+                        finalTopics.Add(topic);
                 }
-                else
-                {
-                    topics = db.Topics.Include("Category")
-                                      .Include("User")
-                                      .Where(
-                                             topic => mergedIds.Contains(topic.Id)
-                                            )
-                                      .OrderByDescending(t => t.Date)
-                                      .ToList();
-                }
+                topics = finalTopics;
 
                 ViewBag.SearchString = search;
 
@@ -140,27 +137,42 @@ namespace OpenDiscussion.Controllers
                 ViewBag.AlertMsg = TempData["message"].ToString();
             }
 
-            if (sortOrder == "resp")
+            switch(sortOrder)
             {
-                topics = db.Topics.Include("Category")
-                                  .Include("User")
-                                  .Where(top => top.CategoryId == id)
-                                  .OrderByDescending(
-                                                    top =>
-                                                    db.Responses
-                                                    .Where(resp => resp.TopicId == top.Id)
-                                                    .Count()
-                                                    )
-                                  .ThenByDescending(top => top.Date)
-                                  .ToList();
-            }
-            else
-            {
-                topics = db.Topics.Include("Category")
+                case "resp":
+                    topics = db.Topics.Include("Category")
+                                      .Include("User")
+                                      .Where(top => top.CategoryId == id)
+                                      .OrderByDescending(
+                                                        top =>
+                                                        db.Responses
+                                                        .Where(resp => resp.TopicId == top.Id)
+                                                        .Count()
+                                                        )
+                                      .ThenByDescending(top => top.Date)
+                                      .ToList();
+                     break;
+                case "name":
+                    topics = db.Topics.Include("Category")
+                                 .Include("User")
+                                 .Where(top => top.CategoryId == id)
+                                 .OrderBy(top => top.Title)
+                                 .ToList();
+                    break;
+                case "length":
+                    topics = db.Topics.Include("Category")
+                                 .Include("User")
+                                 .Where(top => top.CategoryId == id)
+                                 .OrderByDescending(top => top.Content.Length)
+                                 .ToList();
+                    break;
+                default:
+                    topics = db.Topics.Include("Category")
                                   .Include("User")
                                   .Where(top => top.CategoryId == id)
                                   .OrderByDescending(top => top.Date)
                                   .ToList();
+                    break;
             }
 
             string search = null;
@@ -181,26 +193,15 @@ namespace OpenDiscussion.Controllers
 
                 List<int> mergedIds = topicIds.Union(topicIdsOfResponsesWithSearchString).ToList();
 
-                if(sortOrder == "resp")
+                List<Topic> finalTopics = new List<Topic>();
+                foreach(var topic in topics)
                 {
-                    topics = db.Topics.Include("Category")
-                                      .Include("User")
-                                      .Where(topic => mergedIds.Contains(topic.Id) && topic.CategoryId == id)
-                                      .OrderByDescending(top => db.Responses.Where(resp => resp.TopicId == top.Id).Count())
-                                      .ThenByDescending(top => top.Date)
-                                      .ToList();
+                    if (mergedIds.Contains(topic.Id))
+                        finalTopics.Add(topic);
                 }
-                else
-                {
-                    topics = db.Topics.Include("Category")
-                                      .Include("User")
-                                      .Where(topic => mergedIds.Contains(topic.Id) && topic.CategoryId == id)
-                                      .OrderByDescending(t => t.Date)
-                                      .ToList();
-                }
-
+                topics = finalTopics;
             }
-
+           
             ViewBag.SearchString = search;
 
             //AFISARE PAGINATA
