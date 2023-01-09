@@ -12,14 +12,18 @@
 <h1 class="d-flex flex-row justify-content-center m-5 text-light">Manage your account</h1>
 
 <div>
-    <h2 class="d-flex flex-row justify-content-center text-light">Change your account settings</h2>
+    <h2 class="d-flex flex-row justify-content-center text-light mb-2">Change your account settings</h2>
     <hr />
-    <div class="row">
-        <div class="col-md-3 pe-5">
-            <partial name="_ManageNav" />
+    <div class="row mt-4">
+        <div class="col-4">
+            <div class="col-10 border-1">
+                <partial name="_ManageNav" />
+            </div>
         </div>
-        <div class="col-md-9 ps-5">
-            @RenderBody()
+        <div class="col-8">
+            <div class="col-6">
+                @RenderBody()
+            </div>
         </div>
     </div>
 </div>

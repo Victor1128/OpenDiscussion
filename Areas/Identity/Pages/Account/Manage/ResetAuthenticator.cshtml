@@ -5,8 +5,10 @@
     ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
 }
 
+<h3 class="text-light d-flex justify-content-center align-items-center mb-4">@ViewData["Title"]</h3>
+
 <partial name="_StatusMessage" for="StatusMessage" />
-<h3>@ViewData["Title"]</h3>
+
 <div class="alert alert-warning" role="alert">
     <p>
         <span class="glyphicon glyphicon-warning-sign"></span>
@@ -17,7 +19,10 @@
         If you do not complete your authenticator app configuration you may lose access to your account.
     </p>
 </div>
-<div>
+
+<br/>
+
+<div class="d-flex justify-content-center align-items-center">
     <form id="reset-authenticator-form" method="post">
         <button id="reset-authenticator-button" class="btn btn-danger" type="submit">Reset authenticator key</button>
     </form>

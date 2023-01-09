@@ -5,9 +5,11 @@
     ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
 }
 
+<h3 class="text-light d-flex justify-content-center align-items-center mb-4">@ViewData["Title"]</h3>
+
 <partial name="_StatusMessage" for="StatusMessage" />
-<h3>@ViewData["Title"]</h3>
-<div class="alert alert-warning" role="alert">
+
+<div class="alert alert-warning text-light" role="alert">
     <p>
         <span class="glyphicon glyphicon-warning-sign"></span>
         <strong>Put these codes in a safe place.</strong>
@@ -20,8 +22,9 @@
         used in an authenticator app you should <a asp-page="./ResetAuthenticator">reset your authenticator keys.</a>
     </p>
 </div>
+
 <div>
     <form method="post">
-        <button class="btn btn-danger" type="submit">Generate Recovery Codes</button>
+        <button class="btn btn-danger text-light" type="submit">Generate Recovery Codes</button>
     </form>
 </div>
