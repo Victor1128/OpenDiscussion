@@ -4,7 +4,7 @@
   "libraries": [
     {
       "library": "bootstrap@5.2.3",
-      "destination": "wwwroot/lib/bootstrap/",
+      "destination": "wwwroot/lib/bootstrap/dist/bootstrap/",
       "files": [
         "scss/bootstrap-grid.scss",
         "scss/bootstrap-reboot.scss",

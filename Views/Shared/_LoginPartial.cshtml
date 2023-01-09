@@ -7,21 +7,21 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
-        <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
+        <a class="nav-link btn btn-outline-custom text-light border-0" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><i class="bi bi-person-lines-fill pe-2"></i>Hello @User.Identity?.Name!</a>
     </li>
     <li class="nav-item">
-        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Categories", new { area = "" })">
-                <button type="submit" class="nav-link btn btn-link text-light border-0">Logout</button>
+        <form class="form-inline d-flex justify-content-center aling-items-center" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Categories", new { area = "" })">
+            <button type="submit" class="nav-link btn btn-outline-danger text-light border-0" data-toggle="tooltip" data-placement="bottom" title="Logout"><i class="bi bi-box-arrow-right px-1"></i></button>
         </form>
     </li>
 }
 else
 {
     <li class="nav-item">
-        <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        <a class="nav-link btn btn-outline-custom text-light border-0 px-3" asp-area="Identity" asp-page="/Account/Register">Register</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        <a class="nav-link btn btn-outline-success text-light border-0 px-3" asp-area="Identity" asp-page="/Account/Login">Login</a>
     </li>
 }
 </ul>

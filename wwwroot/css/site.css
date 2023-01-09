@@ -30,3 +30,15 @@ body {
     background-color: var(--bs-gray-600) !important;
     transition: background-color .2s;
 }
+
+.btn-outline-custom {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.btn-outline-custom:hover,
+.btn-outline-custom:focus,
+.btn-outline-custom.active {
+    background-color: #A3B8CC;
+    border-color: #A3B8CC;
+}

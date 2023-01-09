@@ -9,10 +9,10 @@
 
     @if (ViewBag.AfisareButoane == true || Model.UserId == ViewBag.UserCurent)
     {
-        <div class="d-flex flex-row justify-content-between">
-            <a class="btn btn-success m-4" href="/Topics/Edit/@Model.Id">Editeaza articol</a>
+        <div class="d-flex flex-row justify-content-between p-3">
+            <a class="btn btn-success" href="/Topics/Edit/@Model.Id"><i class="bi bi-pencil-square pe-2"></i>Editeaza topic</a>
             <form method="post" action="/Topics/Delete/@Model.Id">
-                <button class="btn btn-danger m-4" type="submit">Sterge articol</button>
+                <button class="btn btn-danger" type="submit"><i class="bi bi-trash pe-2"></i>Sterge topic</button>
             </form>
         </div>
     }
@@ -29,22 +29,22 @@
                     <div class="card-body">
                         <div>
                             <p class="m-2">@resp.Content</p>
-                            <div class="card-footer d-flex align-items-center justify-content-center rounded-2">
-                                <small class="flex-fill">@resp.Date</small>
-                                <strong class="flex-fill"><i class="bi bi-person px-2"></i>@resp.User.UserName</strong>
+                            <div class="card-footer d-flex align-items-center justify-content-center rounded-2 bg-secondary text-light">
+                                <strong class="d-flex flex-fill justify-content-center align-items-center"><i class="bi bi-person text-light px-2"></i>@resp.User.UserName</strong>
+                                <small class="d-flex flex-fill justify-content-center align-items-center"><i class="bi bi-calendar text-light px-2"></i>@resp.Date.ToShortDateString()</small>
                             </div>
                         </div>
-
-                        @if (ViewBag.AfisareButoane == true || resp.UserId == ViewBag.userCurent)
-                        {
-                            <div class="d-flex flex-row justify-content-between">
-                                <a class="btn btn-outline-primary mt-3" href="/Responses/Edit/@resp.Id"><i class="bi bi-pencil-square"></i>Editeaza</a>
-                                <form method="post" action="/Responses/Delete/@resp.Id">
-                                    <button class="btn btn-outline-danger mt-3" type="submit"><i class="bi bi-trash"></i>Sterge</button>
-                                </form>
-                            </div>
-                        }
                     </div>
+
+                    @if (ViewBag.AfisareButoane == true || resp.UserId == ViewBag.userCurent)
+                    {
+                        <div class="d-flex flex-row justify-content-between p-3">
+                            <a class="btn btn-outline-primary" href="/Responses/Edit/@resp.Id"><i class="bi bi-pencil-square pe-2"></i>Editeaza</a>
+                            <form method="post" action="/Responses/Delete/@resp.Id">
+                                <button class="btn btn-outline-danger" type="submit"><i class="bi bi-trash pe-2"></i>Sterge</button>
+                            </form>
+                        </div>
+                    }
                 </div>
             </div>
 

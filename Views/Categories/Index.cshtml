@@ -68,7 +68,7 @@
         <div class="card">
             <a class="btn btn-block" href="/Topics/Show/@top.Id">
                 <div class="card-body">
-                    <h5 class="card-title py-3 px-3 m-0 rounded-2 text-light" style="background-color: var(--bs-dark) !important;">@top.Title</h5>
+                    <h5 class="card-title py-3 px-3 m-0 rounded-2 text-light" style="background-color: var(--bs-dark) !important;"><i class="bi bi-journal pe-3"></i>@top.Title</h5>
                 </div>
             </a>
         </div>
@@ -128,7 +128,7 @@ else{
     <div class="card">
         <a class="btn btn-block" href="/Categories/Show/@category.Id">
             <div class="card-body">
-                    <h3 class="card-title d-flex flex-fill justify-content-center align-items-center py-3 px-3 rounded-2 text-light" style="background-color: var(--bs-dark) !important;">@category.CategoryName</h3>
+                    <h3 class="card-title d-flex flex-fill justify-content-center align-items-center py-3 px-3 rounded-2 text-light" style="background-color: var(--bs-dark) !important;"><i class="bi bi-bookmark pe-3"></i>@category.CategoryName</h3>
             </div>
         </a>
 
@@ -137,12 +137,12 @@ else{
             <div class="card-footer">
                 <div class="d-flex align-items-center">
                     <div class="d-flex flex-fill justify-content-center align-items-center m-1">
-                        <a class="btn btn-success" href="/Categories/Edit/@category.Id">Editare categorie</a>
+                        <a class="btn btn-success" href="/Categories/Edit/@category.Id"><i class="bi bi-pencil-square pe-2"></i>Editare categorie</a>
                     </div>
 
                     <div class="d-flex flex-fill justify-content-center align-items-center m-1">
                         <form method="post" action="/Categories/Delete/@category.Id">
-                            <button class="btn btn-danger" type="submit">Sterge categoria</button>
+                                <button class="btn btn-danger" type="submit"><i class="bi bi-trash pe-2"></i>Sterge categoria</button>
                         </form>
                     </div>
                 </div>
@@ -158,7 +158,7 @@ else{
     if (User.IsInRole("Admin"))
     {
         <div class="d-flex align-items-center">
-            <a class="btn flex-fill btn-success p-2" href="/Categories/New">Adauga o noua categorie</a>
+            <a class="btn flex-fill btn-success p-2" href="/Categories/New"><i class="bi bi-bookmark-plus pe-2"></i>Adauga o noua categorie</a>
         </div>
     }
 }
