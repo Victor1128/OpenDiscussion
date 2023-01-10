@@ -293,7 +293,14 @@ namespace OpenDiscussion.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id)
         {
+            IEnumerable<Topic> topics = db.Topics.Include("Responses")
+                                                 .Where(top => top.CategoryId == id);
+
             Category category = db.Categories.Find(id);
+
+            foreach(Topic top in topics)
+                db.Topics.Remove(top);
+
             db.Categories.Remove(category);
             db.SaveChanges();
 
