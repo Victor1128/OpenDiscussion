@@ -32,7 +32,7 @@
 
         <br />
 
-        @Html.Editor("Content", new { htmlAttributes = new { @style = "width:90%; box-sizing:border-box !important;", @class = "form-control d-flex align-items-center justify-content-center m-auto" } })
+        @Html.TextAreaFor(m => m.Content, new { @style = "width:90%; box-sizing:border-box !important;", @class = "form-control d-flex align-items-center justify-content-center m-auto" })
 
         <br />
 
